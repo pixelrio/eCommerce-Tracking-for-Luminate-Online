@@ -1,0 +1,219 @@
+<script type="text/javascript">
+  function donationTracker(){
+    //fetches the donation gift amount
+    var giftAmount = "[[S120:dc:giftAmount]]";
+    //gets rid of dollar sign
+    giftAmount = giftAmount.replace("$", "");
+    //gets campaign name for reporting
+    var campaignId = "[[S120:dc:campaignId]]";
+    //gets campaign id and donation form name for reporting 
+    //gets rid of any apostrophe's
+    campaignId = campaignId.replace("'", "");
+    var donationFormName = "[[S120:dc:donationFormName]]";
+    donationFormName = donationFormName.replace("'","");
+    //push data to the datalayer
+    dataLayer.push({
+      'event': 'sendTransaction',
+      'ecommerce': {
+        'purchase': {
+          'actionField': {
+              'id': '[[S120:dc:transactionID]]',
+              'affiliation': '[[S120:dc:campaignId]]',
+              'revenue': giftAmount
+          },
+          'products': [{
+              'id': '[[S120:dc:donFormId]]',
+              'name': donationFormName,
+              'price': giftAmount,
+              'category': "camh Events/Donations",
+              'brand': 'camh',
+              'quantity': 1
+          }] 
+        }
+      }
+    });
+  }
+
+  function eCommerceTracker(){
+    //gets the store id
+    var storeId = "[[S334:store_id]]"; 
+      //detects if there is a personal gift
+      if($('.ShoppingCart tr td:contains("Your Personal Donation")').length > 0){
+        //scrapes page for eCommerce data
+        rowCount = $('.ShoppingCart tr').length;
+        rowCount = rowCount - 3;
+        var personalGift = $('.ShoppingCart tr:nth-last-child(2)').find("td:last-child strong").html().replace("$","").trim();
+        $('.ShoppingCart tr').not(':first').not(':last').addClass('eComTrans');
+        
+        eQuantity = [];
+        transTotal = [];
+        itemName = [];
+
+        $(".eComTrans").each(function(){
+          //grabs all eCommerce products bought
+          eQuantity.push($(this).find("td:first").text().trim());
+          itemName.push($(this).find("span.CartItemName").first().text().replace("'",""));
+          transTotal.push($(this).find("td:last").text().replace("$","").trim());  
+        });
+
+        trackingCode =  $('span#tracking_code').text();
+        eTotal = $('.ShoppingCart tr:last td:last').text().replace("$","").trim();
+        console.log("eQuantity: " + eQuantity + "itemName: " + itemName);
+        for (var i = 0; i < rowCount; i++) {
+          if(eQuantity[i] > 0){ 
+            dataLayer.push({
+              'event': 'sendTransaction',
+              'ecommerce': {
+                'purchase': {
+                  'actionField': {
+                    'id': '[[S120:dc:transactionID]]', //unique transaction ID
+                    'affiliation': storeId,
+                    'revenue': eTotal
+                    },
+                    'products': [{
+                      'id': '[[S120:dc:transactionID]]',
+                      'name': itemName[i],
+                      'category': 'eCommerce',
+                      'price': eTotal,
+                      'brand': 'camh',
+                      'quantity': eQuantity[i]
+                    }]    
+                  }
+                }
+              });
+            }
+        }
+        //Adding personal gift if present
+        if(personalGift > 0){
+          dataLayer.push({
+          'event': 'sendUpsell',
+          'ecommerce': {
+            'purchase': {
+              'actionField': {
+                'id': '[[S120:dc:transactionID]]', //unique transaction ID
+                'affiliation': storeId,
+                'revenue': personalGift
+                },
+                'products': [{
+                  'id': '[[S120:dc:transactionID]]',
+                    'name': 'Personal Gift',
+                    'category': 'Upsell',
+                    'price': personalGift,
+                    'brand': 'camh',
+                    'quantity': '1'
+                }]
+              }
+            }
+          });
+        }
+      }
+      else{
+        rowCount = $('.ShoppingCart tr').length;
+        rowCount = rowCount - 2;
+
+        $('.ShoppingCart tr').not(':first').not(':last').addClass('eComTrans');
+        eQuantity = [];
+        transTotal = [];
+        itemName = [];
+
+        $(".eComTrans").each(function(){
+          eQuantity.push($(this).find("td:first").text().trim());
+          itemName.push($(this).find("span.CartItemName").first().text().replace("'",""));
+          transTotal.push($(this).find("td:last").text().replace("$","").trim());  
+        });
+
+        trackingCode =  $('span#tracking_code').text();
+        eTotal = $('.ShoppingCart tr:last td:last').text().replace("$","").trim();
+        console.log("eQuantity: " + eQuantity + "itemName: " + itemName);
+        
+        for (var i = 0; i < rowCount; i++) {
+          if(eQuantity[i] > 0){ 
+            dataLayer.push({
+              'event': 'sendTransaction',
+              'ecommerce': {
+                'purchase': {
+                  'actionField': {
+                    'id': '[[S120:dc:transactionID]]', //unique transaction ID
+                    'affiliation': storeId,
+                    'revenue': eTotal
+                    },
+                    'products': [{
+                      'id': '[[S120:dc:transactionID]]',
+                      'name': itemName[i],
+                      'category': 'eCommerce',
+                      'price': eTotal,
+                      'brand': 'camh',
+                      'quantity': eQuantity[i]
+                    }]    
+                  }
+                }
+              });
+            }
+        }
+      }
+    }
+  </script>
+
+
+[[?xx::x[[S1:user_name]]x::
+
+  <script>
+    dataLayer = [{'userid':'visitor'}];
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      //checks for the donation form completion page
+      if(window.location.href.indexOf("donation=completed") > -1){
+        //calling the donation tracker function.
+        donationTracker();
+      }
+      //ecommerce completion page
+      if(window.location.href.indexOf("CONFIRMATION=true") > -1){
+        console.log("eCommerce Completed, user not logged in");
+        //calling the ecommerce tracker
+        eCommerceTracker();
+      }
+    });
+  </script>
+  <!-- Google Tag Manager -->
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W4RLPB"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXX');</script>
+  <!-- End Google Tag Manager -->
+
+::
+
+  <!-- Data Layer for GTM for logged in folks--> 
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if(window.location.href.indexOf("donation=completed") > -1){
+         //calling the donation tracker function.
+         donationTracker();
+       }
+      if(window.location.href.indexOf("CONFIRMATION=true") > -1){
+        console.log("eCommerce Completed, user is logged in");
+        eCommerceTracker();
+      }
+    });
+  </script>
+  <script>
+    dataLayer = [{
+      'userId': '[[S1:cons_id]]'
+    }];
+   </script>
+   <!-- Data Layer for GTM --> 
+   <!-- Google Tag Manager -->
+   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W4RLPB"
+   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXX');</script>
+  <!-- End Google Tag Manager -->
+
+]]
