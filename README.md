@@ -13,7 +13,7 @@ This is a comprehensive script for enabling eCommerce tracking on Luminate Onlin
 <h2>Instructions</h2>
 <ol>
   <li>Install jQery in the page wrapper header.</li>
-  <li>Create a reusable page containing this script, dont forget to put the script tags.</li>
+  <li>Create a reusable page using eCommerce.txt file.</li>
   <li>Drop this reusable page at the first line in the page wrapper body section.</li>
   <li>Disable the out of box Google Analytics tracking from site options.</li>
 </ol>
