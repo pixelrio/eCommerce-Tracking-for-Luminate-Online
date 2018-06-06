@@ -25,8 +25,8 @@
               'id': '[[S120:dc:donFormId]]',
               'name': donationFormName,
               'price': giftAmount,
-              'category': "camh Events/Donations",
-              'brand': 'camh',
+              'category': "Events/Donations",
+              'brand': 'NAME',
               'quantity': 1
           }] 
         }
@@ -75,7 +75,7 @@
                       'name': itemName[i],
                       'category': 'eCommerce',
                       'price': eTotal,
-                      'brand': 'camh',
+                      'brand': 'NAME',
                       'quantity': eQuantity[i]
                     }]    
                   }
@@ -99,7 +99,7 @@
                     'name': 'Personal Gift',
                     'category': 'Upsell',
                     'price': personalGift,
-                    'brand': 'camh',
+                    'brand': 'NAME',
                     'quantity': '1'
                 }]
               }
@@ -176,7 +176,7 @@
     });
   </script>
   <!-- Google Tag Manager -->
-    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W4RLPB"
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-XXXXXX"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -207,7 +207,7 @@
    </script>
    <!-- Data Layer for GTM --> 
    <!-- Google Tag Manager -->
-   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-W4RLPB"
+   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-XXXXXX"
    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
