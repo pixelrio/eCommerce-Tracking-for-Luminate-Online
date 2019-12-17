@@ -24,8 +24,8 @@
             'ecommerce': {
                 'purchase': {
                     'actionField': {
-                        'id': '[[S120:dc:donFormId]]',
-                        //'affiliation': '[[S120:dc:donFormId]]',
+                        'id': '[[S120:dc:transactionID]]',
+                        'affiliation': '[[S120:dc:campaignId]]',
                         'sustainerActive': "[[S120:dc:recurringCurrentStatusString]]",
                         'revenue': giftAmount
                     },
