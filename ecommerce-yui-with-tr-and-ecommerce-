@@ -5,6 +5,7 @@
         var giftAmount = "[[S120:dc:giftAmount]]";
         //gets rid of dollar sign
         giftAmount = giftAmount.replace("$", "");
+        giftAmount = parseFloat(giftAmount.replace(/,/g, '')); 
         //gets campaign name for reporting
         var campaignId = "[[S120:dc:campaignId]]";
         //gets campaign id and donation form name for reporting 
