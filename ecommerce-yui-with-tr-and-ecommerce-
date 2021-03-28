@@ -113,6 +113,32 @@
         }
 
     }
+    function registrationTracker(){
+        var personalGift = document.querySelectorAll("#total_amt")[0].innerHTML.replace("$", "").trim();
+        var trackingCode = document.querySelectorAll("#tracking_code_value")[0];
+        if (personalGift > 0) {
+            dataLayer.push({
+                'event': 'sendAdditionalGift',
+                'ecommerce': {
+                    'purchase': {
+                        'actionField': {
+                            'id': trackingCode, //unique transaction ID
+                            'affiliation': storeId,
+                            'revenue': personalGift
+                        },
+                        'products': [{
+                            'id': trackingCode,
+                            'name': 'Additional Gift',
+                            'category': 'Registration Additional Gift',
+                            'price': personalGift,
+                            'brand': 'Operation Smile',
+                            'quantity': '1'
+                        }]
+                    }
+                }
+            });
+        }
+    }
 </script>
 
 
@@ -133,6 +159,12 @@
             console.log("eCommerce Completed, user not logged in");
             //calling the ecommerce tracker
             eCommerceTracker();
+        }
+        //Registration Completed
+        if (window.location.href.indexOf("pg=rthanks") > -1) {
+            console.log("eCommerce Completed, user not logged in");
+            //calling the Registration Tracker
+            registrationTracker();
         }
     });
 
@@ -162,6 +194,12 @@
         if (window.location.href.indexOf("CONFIRMATION=true") > -1) {
             console.log("eCommerce Completed, user is logged in");
             eCommerceTracker();
+        }
+        //Registration Completed
+        if (window.location.href.indexOf("pg=rthanks") > -1) {
+            console.log("eCommerce Completed, user not logged in");
+            //calling the Registration Tracker
+            registrationTracker();
         }
     });
 </script>
