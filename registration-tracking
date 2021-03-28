@@ -1,0 +1,147 @@
+<script type="text/javascript">
+
+    function donationTracker() {
+        //fetches the donation gift amount
+        var giftAmount = "[[S120:dc:giftAmount]]";
+        //gets rid of dollar sign
+        giftAmount = giftAmount.replace("$", "");
+        giftAmount = parseFloat(giftAmount.replace(/,/g, '')); 
+        //gets campaign name for reporting
+        var campaignId = "[[S120:dc:campaignId]]";
+        //gets campaign id and donation form name for reporting 
+        //gets rid of any apostrophe's
+        campaignId = campaignId.replace("'", "");
+        var donationFormName = "[[S120:dc:donationFormName]]";
+        donationFormName = donationFormName.replace("'", "");
+        //push data to the datalayer
+        var rev = "[[S120:dc:giftAmount]]";
+        var recu = "[[S120:dc:recurringCurrentStatusString]]";
+        var mon = "Donation_OneTime";
+        if (recu == "Active") {
+            mon = "Donation_Recurring";
+        }
+        dataLayer.push({
+            'event': 'sendTransaction',
+            'ecommerce': {
+                'purchase': {
+                    'actionField': {
+                        'id': '[[S120:dc:transactionID]]',
+                        'affiliation': '[[S120:dc:campaignId]]',
+                        'sustainerActive': "[[S120:dc:recurringCurrentStatusString]]",
+                        'revenue': giftAmount
+                    },
+                    'products': [{
+                        'id': '[[S120:dc:donFormId]]',
+                        'name': donationFormName,
+                        'price': giftAmount,
+                        'category': mon,
+                        'brand': 'Brand',
+                        'quantity': 1
+                    }]
+                }
+            }
+        });
+    }
+
+    function registrationTracker(){
+        var personalGift = document.querySelectorAll("#total_amt")[0].innerHTML.replace("$", "").trim();
+        var trackingCode = document.querySelectorAll("#tracking_code_value")[0].innerHTML.trim();
+        if (personalGift > 0) {
+            dataLayer.push({
+                'event': 'sendAdditionalGift',
+                'registrationType': '[[E48:[[S334:fr_id]]:part-type]]',
+                'registrationRevenue': personalGift,
+                'ecommerce': {
+                    'purchase': {
+                        'actionField': {
+                            'id': trackingCode, //unique transaction ID
+                            'affiliation': '[[S334:fr_id]]',
+                            'revenue': personalGift
+                        },
+                        'products': [{
+                            'id': trackingCode,
+                            'name': 'Additional Gift',
+                            'category': '[[S334:fr_id]]:[[E48:[[S334:fr_id]]:part-type]]',
+                            'price': personalGift,
+                            'brand': 'Brand',
+                            'quantity': '1'
+                        }]
+                    }
+                }
+            });
+        }
+    }
+</script>
+
+
+[[?xx::x[[S1:user_name]]x::
+
+<script>
+    dataLayer = [{ 'userid': 'visitor' }];
+</script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function (event) {
+        //checks for the donation form completion page
+        if (window.location.href.indexOf("donation=completed") > -1) {
+            //calling the donation tracker function.
+            donationTracker();
+        }
+        //Registration Completed
+        if (window.location.href.indexOf("pg=rthanks") > -1) {
+            console.log("eCommerce Completed, user not logged in");
+            //calling the Registration Tracker
+            registrationTracker();
+        }
+    });
+
+</script>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-XXXXXX" height="0" width="0"
+        style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-XXXXXX');</script>
+<!-- End Google Tag Manager -->
+
+::
+
+<!-- Data Layer for GTM for logged in folks-->
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function (event) {
+        if (window.location.href.indexOf("donation=completed") > -1) {
+            //calling the donation tracker function.
+            donationTracker();
+        }
+        //Registration Completed
+        if (window.location.href.indexOf("pg=rthanks") > -1) {
+            console.log("eCommerce Completed, user not logged in");
+            //calling the Registration Tracker
+            registrationTracker();
+        }
+    });
+</script>
+<script>
+    dataLayer = [{
+        'userId': '[[S1:cons_id]]'
+    }];
+</script>
+<!-- Data Layer for GTM -->
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-XXXXXX" height="0" width="0"
+        style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-XXXXXX');</script>
+<!-- End Google Tag Manager -->
+
+]]
