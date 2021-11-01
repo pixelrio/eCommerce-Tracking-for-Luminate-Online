@@ -59,9 +59,11 @@
         });
 
         trackingCode = document.querySelectorAll('span#tracking_code')[0].innerHTML;
-        eTotal = document.querySelectorAll('#total')[0].innerHTML.replace("$", "").trim();
+        eTotal = document.querySelectorAll('#total_item_price')[0].innerHTML.replace("$", "").trim();
 
-        var personalGift = document.querySelectorAll("#additional_donation")[0].innerHTML.replace("$", "").trim();
+        if(document.querySelectorAll("#additional_donation")[0]) {
+           var personalGift = document.querySelectorAll("#additional_donation")[0].innerHTML.replace("$", "").trim();
+        }
 
         if (personalGift > 0) {
             dataLayer.push({
